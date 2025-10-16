@@ -132,6 +132,9 @@ def copy_image_assets(input_dir: Path, output_dir: Path, exclude_patterns: List[
     # Define image extensions to copy
     image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.svg', '.pdf'}
 
+    # Get output directory name for exclusion
+    output_dir_name = output_dir.name
+
     # Find all image files
     for ext in image_extensions:
         for image_file in input_dir.rglob(f"*{ext}"):
@@ -144,6 +147,10 @@ def copy_image_assets(input_dir: Path, output_dir: Path, exclude_patterns: List[
                 relative_path = image_file.relative_to(input_dir)
             except ValueError:
                 # Skip if file is not under input_dir
+                continue
+
+            # Skip if file is inside output directory (prevent recursive copying)
+            if relative_path.parts and relative_path.parts[0] == output_dir_name:
                 continue
 
             # Check if file matches any exclude pattern
