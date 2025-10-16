@@ -1,0 +1,26 @@
+[project]
+name = "md2pages"
+version = "0.1.0"
+description = "Markdown to responsive HTML converter for static sites"
+readme = "README.md"
+authors = [
+    { name = "mshattori", email = "mshattori@gmail.com" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "jinja2>=3.1.6",
+    "markdown>=3.9",
+    "pyyaml>=6.0.3",
+]
+
+[project.scripts]
+md2pages = "md2pages.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]

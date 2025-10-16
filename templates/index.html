@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>ページ一覧</h2>
+<ul>
+{% for page in pages %}
+    <li><a href="{{ base_url }}{{ page.relative_path }}">{{ page.title }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}
