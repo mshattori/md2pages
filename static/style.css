@@ -131,6 +131,12 @@ blockquote {
         font-size: 16px;
     }
 
+    /* Remove centering and reduce padding for full-width on mobile */
+    header, main, footer {
+        margin: 0;
+        padding: 0.5rem;
+    }
+
     header h1 {
         font-size: 1.25rem;
     }
@@ -139,15 +145,31 @@ blockquote {
     h2 { font-size: 1.5rem; }
     h3 { font-size: 1.25rem; }
 
-    header, main, footer {
-        padding: 0.75rem;
+    /* Reduce list indentation on mobile */
+    ul, ol {
+        padding-left: 1.5em;
     }
 
+    /* Make tables scrollable horizontally on mobile */
     table {
+        display: block;
+        overflow-x: auto;
         font-size: 0.9rem;
+        white-space: nowrap;
     }
 
     th, td {
         padding: 0.4rem;
+    }
+
+    /* Reduce code block padding on mobile */
+    pre {
+        padding: 0.5rem;
+    }
+
+    /* Reduce blockquote padding on mobile */
+    blockquote {
+        padding-left: 0.5rem;
+        margin: 0.5rem 0;
     }
 }
