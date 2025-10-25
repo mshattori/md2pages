@@ -1,9 +1,10 @@
 """File operation utilities for md2pages."""
 
-from pathlib import Path
-from typing import List
 import fnmatch
 import shutil
+from importlib import resources
+from pathlib import Path
+from typing import List
 
 
 def find_markdown_files(input_dir: Path, exclude_patterns: List[str]) -> List[Path]:
@@ -96,26 +97,25 @@ def copy_static_assets(output_dir: Path) -> None:
         FileNotFoundError: If static assets are not found
         IOError: If files cannot be copied
     """
-    # Find package directory (parent of this module)
-    package_dir = Path(__file__).parent.parent
-    static_src = package_dir / "static"
+    # Find packaged static directory using importlib.resources for compatibility
+    static_dir = resources.files("md2pages").joinpath("static")
     static_dst = output_dir / "static"
 
     # Ensure destination directory exists
     ensure_dir(static_dst)
 
     # Copy CSS file
-    css_src = static_src / "style.css"
-    if css_src.exists():
+    css_src = static_dir.joinpath("style.css")
+    if css_src.is_file():
         css_dst = static_dst / "style.css"
-        shutil.copy2(css_src, css_dst)
+        css_dst.write_bytes(css_src.read_bytes())
         print(css_dst.resolve())
 
     # Copy JavaScript file
-    js_src = static_src / "script.js"
-    if js_src.exists():
+    js_src = static_dir.joinpath("script.js")
+    if js_src.is_file():
         js_dst = static_dst / "script.js"
-        shutil.copy2(js_src, js_dst)
+        js_dst.write_bytes(js_src.read_bytes())
         print(js_dst.resolve())
 
 

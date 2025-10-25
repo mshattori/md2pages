@@ -1,11 +1,11 @@
 """Template rendering for md2pages."""
 
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import List
-from datetime import datetime
 
-from jinja2 import Environment, FileSystemLoader, TemplateNotFound
+from jinja2 import ChoiceLoader, Environment, FileSystemLoader, PackageLoader, TemplateNotFound
 
 
 @dataclass
@@ -25,13 +25,16 @@ class TemplateRenderer:
         Args:
             template_dir: Directory containing templates. If None, uses package templates/.
         """
-        if template_dir is None:
-            # Use package templates directory
-            package_dir = Path(__file__).parent.parent
-            template_dir = package_dir / "templates"
-
         try:
-            self.env = Environment(loader=FileSystemLoader(str(template_dir)))
+            if template_dir is None:
+                loader = PackageLoader("md2pages", "templates")
+            else:
+                loader = ChoiceLoader([
+                    FileSystemLoader(str(template_dir)),
+                    PackageLoader("md2pages", "templates"),
+                ])
+
+            self.env = Environment(loader=loader)
         except Exception as e:
             raise RuntimeError(f"Failed to initialize template environment: {e}")
 
