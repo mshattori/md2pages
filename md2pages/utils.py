@@ -79,6 +79,7 @@ def write_file(path: Path, content: str) -> None:
 
     with open(path, 'w', encoding='utf-8') as f:
         f.write(content)
+    print(path.resolve())
 
 
 def copy_static_assets(output_dir: Path) -> None:
@@ -106,12 +107,16 @@ def copy_static_assets(output_dir: Path) -> None:
     # Copy CSS file
     css_src = static_src / "style.css"
     if css_src.exists():
-        shutil.copy2(css_src, static_dst / "style.css")
+        css_dst = static_dst / "style.css"
+        shutil.copy2(css_src, css_dst)
+        print(css_dst.resolve())
 
     # Copy JavaScript file
     js_src = static_src / "script.js"
     if js_src.exists():
-        shutil.copy2(js_src, static_dst / "script.js")
+        js_dst = static_dst / "script.js"
+        shutil.copy2(js_src, js_dst)
+        print(js_dst.resolve())
 
 
 def copy_image_assets(input_dir: Path, output_dir: Path, exclude_patterns: List[str]) -> None:
@@ -123,7 +128,7 @@ def copy_image_assets(input_dir: Path, output_dir: Path, exclude_patterns: List[
 
     Args:
         input_dir: Input directory containing images
-        output_dir: Output directory (e.g., site/)
+        output_dir: Output directory (can be relative path like ../other_repo/site)
         exclude_patterns: List of glob patterns to exclude
 
     Raises:
@@ -132,8 +137,8 @@ def copy_image_assets(input_dir: Path, output_dir: Path, exclude_patterns: List[
     # Define image extensions to copy
     image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.svg', '.pdf'}
 
-    # Get output directory name for exclusion
-    output_dir_name = output_dir.name
+    # Resolve output directory to absolute path for accurate comparison
+    output_dir_resolved = output_dir.resolve()
 
     # Find all image files
     for ext in image_extensions:
@@ -142,15 +147,23 @@ def copy_image_assets(input_dir: Path, output_dir: Path, exclude_patterns: List[
             if not image_file.is_file():
                 continue
 
+            # Resolve image file to absolute path
+            image_file_resolved = image_file.resolve()
+
+            # Skip if file is inside output directory (prevent recursive copying)
+            try:
+                image_file_resolved.relative_to(output_dir_resolved)
+                # If relative_to succeeds, the file is inside output_dir
+                continue
+            except ValueError:
+                # File is not inside output_dir, proceed with copying
+                pass
+
             # Get relative path for pattern matching
             try:
                 relative_path = image_file.relative_to(input_dir)
             except ValueError:
                 # Skip if file is not under input_dir
-                continue
-
-            # Skip if file is inside output directory (prevent recursive copying)
-            if relative_path.parts and relative_path.parts[0] == output_dir_name:
                 continue
 
             # Check if file matches any exclude pattern
@@ -166,6 +179,7 @@ def copy_image_assets(input_dir: Path, output_dir: Path, exclude_patterns: List[
                 output_path = output_dir / relative_path
                 ensure_dir(output_path.parent)
                 shutil.copy2(image_file, output_path)
+                print(output_path.resolve())
 
 
 def ensure_dir(path: Path) -> None:

@@ -42,6 +42,8 @@ Create a `.site.yml` file in your input directory to customize the site generati
 
 ```yaml
 # Output directory name (default: "site")
+# Can be relative path (e.g., "../public_repo/site" to output to a different repository)
+# Can be absolute path (e.g., "/var/www/html/site")
 output_dir: site
 
 # Files to exclude from conversion (glob patterns)
@@ -98,6 +100,18 @@ exclude:
 site:
   title: "Local Notes"
   base_url: ""  # Empty for local file:// or simple HTTP server
+```
+
+**Example 4: Output to a different repository (e.g., separate public repo)**
+```yaml
+output_dir: "../my-public-repo/docs"  # Relative path to different repository
+exclude:
+  - ".git/**"
+  - "README.md"
+  - "private/**"
+site:
+  title: "Public Documentation"
+  base_url: "/my-public-repo/"
 ```
 
 ### Frontmatter Support
