@@ -78,12 +78,16 @@ def generate_site(input_dir: Path, config: SiteConfig) -> GenerationResult:
             # Convert Markdown to HTML
             html_content, title = convert_markdown(md_content, fallback_title)
 
+            # Check if this is user-provided index.md (case-insensitive)
+            is_index_page = html_path.name.lower() == "index.html"
+
             # Render page
             rendered_html = renderer.render_page(
                 content=html_content,
                 title=title,
                 site_title=config.site_title,
-                base_url=config.base_url
+                base_url=config.base_url,
+                is_index=is_index_page
             )
 
             # Write output file

@@ -38,7 +38,7 @@ class TemplateRenderer:
         except Exception as e:
             raise RuntimeError(f"Failed to initialize template environment: {e}")
 
-    def render_page(self, content: str, title: str, site_title: str, base_url: str) -> str:
+    def render_page(self, content: str, title: str, site_title: str, base_url: str, is_index: bool = False) -> str:
         """
         Render a page using page.html template.
 
@@ -47,6 +47,7 @@ class TemplateRenderer:
             title: Page title
             site_title: Site title
             base_url: Base URL for links
+            is_index: Whether this is a user-provided index page
 
         Returns:
             Rendered HTML string
@@ -67,7 +68,8 @@ class TemplateRenderer:
             title=title,
             site_title=site_title,
             base_url=base_url,
-            year=year
+            year=year,
+            is_index=is_index
         )
 
     def render_index(self, pages: List[PageInfo], site_title: str, base_url: str) -> str:
