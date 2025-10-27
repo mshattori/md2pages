@@ -165,6 +165,19 @@ blockquote {
     /* Reduce code block padding on mobile */
     pre {
         padding: 0.5rem;
+        /* Improve long code lines on mobile */
+        white-space: pre-wrap;        /* preserve indentation and line breaks, allow wrapping */
+        overflow-wrap: anywhere;      /* allow breaks inside long tokens if needed */
+        word-wrap: break-word;        /* legacy alias for overflow-wrap for broader support */
+    }
+
+    pre code {
+        white-space: inherit;         /* keep wrapping consistent with the pre */
+    }
+
+    /* Slightly smaller code text on mobile to fit more characters */
+    pre, code {
+        font-size: 0.9rem;
     }
 
     /* Reduce blockquote padding on mobile */
