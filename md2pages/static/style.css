@@ -172,11 +172,15 @@ blockquote {
     }
 
     pre code {
+        display: block;               /* make code a block to accept text-indent cleanly */
         white-space: inherit;         /* keep wrapping consistent with the pre */
+        /* Hanging indent for wrapped lines on mobile */
+        padding-left: 1.5ch;          /* indent all lines */
+        text-indent: -1.5ch;          /* outdent first line back */
     }
 
     /* Slightly smaller code text on mobile to fit more characters */
-    pre, code {
+    pre {
         font-size: 0.9rem;
     }
 
